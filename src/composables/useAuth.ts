@@ -13,6 +13,8 @@ export function useAuth() {
     onAuthStateChanged(auth, (user) => {
       store.setUser(user ? { uid: user.uid, email: user.email } : null);
       initialized.value = true;
+      
+      console.log('useAuth initialized', user)
     });
   });
 

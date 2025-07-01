@@ -12,10 +12,15 @@ export const register = (email: string, password: string) => {
 };
 
 export const login = async (email: string, password: string, remember: boolean) => {
-  if (remember) {
-    await setPersistence(auth, browserLocalPersistence);
+
+  try {
+    if (remember) {
+      await setPersistence(auth, browserLocalPersistence);
+    }
+    return signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    return error
   }
-  return signInWithEmailAndPassword(auth, email, password);
 };
 
 export const logout = () => signOut(auth);

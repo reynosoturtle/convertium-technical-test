@@ -5,6 +5,8 @@ import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import ProfileView from '../views/ProfileView.vue';
 import EditProfileView from '../views/EditProfileView.vue';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/apis/firebase'
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: HomeView },
@@ -19,16 +21,23 @@ const router = createRouter({
   routes
 });
 
+let isAuthReady = false
+
 router.beforeEach(async (to, from, next) => {
-  const authStore = useAuthStore();
-
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-
-  if (requiresAuth && !authStore.user) {
-    next('/login');
-  } else {
-    next();
+  if (!isAuthReady) {
+    await new Promise((resolve) => {
+      const unsubscribe = onAuthStateChanged(auth, () => {
+        isAuthReady = true
+        unsubscribe()
+        resolve(true)
+      })
+    })
   }
+  
+  const authStore = useAuthStore();
+  
+  if (to.meta.requiresAuth && !authStore.user) next('/login')
+  else next()
 });
 
 
