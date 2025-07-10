@@ -11,9 +11,7 @@ import AvatarIcon from '@/components/icons/AvatarIcon.vue'
 
 const { profile } = useProfile()
 
-type ProfileImageMode = {
-  mode: 'display' | 'button'
-}
+type ProfileImageMode = 'display' | 'button'
 
 defineProps<{
   mode: ProfileImageMode
