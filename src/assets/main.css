@@ -1,1 +1,190 @@
 @import './base.css';
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+html {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+:root {
+  /* primary / secondary */
+  --color-indigo-50: oklch(96.2% .018 272.314);
+  --color-indigo-100: oklch(93% .034 272.788);
+  --color-indigo-200: oklch(87% .065 274.039);
+  --color-indigo-300: oklch(78.5% .115 274.713);
+  --color-indigo-400: oklch(67.3% .182 276.935);
+  --color-indigo-500: oklch(58.5% .233 277.117);
+  --color-indigo-600: oklch(51.1% .262 276.966);
+  --color-indigo-700: oklch(45.7% .24 277.023);
+  --color-indigo-800: oklch(39.8% .195 277.366);
+  --color-indigo-900: oklch(35.9% .144 278.697);
+  --color-indigo-950: oklch(25.7% .09 281.288);
+  /* secondary */
+  --color-emerald-50: oklch(97.9% .021 166.113);
+  --color-emerald-100: oklch(95% .052 163.051);
+  --color-emerald-200: oklch(90.5% .093 164.15);
+  --color-emerald-300: oklch(84.5% .143 164.978);
+  --color-emerald-400: oklch(76.5% .177 163.223);
+  --color-emerald-500: oklch(69.6% .17 162.48);
+  --color-emerald-600: oklch(59.6% .145 163.225);
+  --color-emerald-700: oklch(50.8% .118 165.612);
+  --color-emerald-800: oklch(43.2% .095 166.913);
+  --color-emerald-900: oklch(37.8% .077 168.94);
+  --color-emerald-950: oklch(26.2% .051 172.552);
+  /* neutral */
+  --color-slate-50: oklch(98.4% .003 247.858);
+  --color-slate-100: oklch(96.8% .007 247.896);
+  --color-slate-200: oklch(92.9% .013 255.508);
+  --color-slate-300: oklch(86.9% .022 252.894);
+  --color-slate-400: oklch(70.4% .04 256.788);
+  --color-slate-500: oklch(55.4% .046 257.417);
+  --color-slate-600: oklch(44.6% .043 257.281);
+  --color-slate-700: oklch(37.2% .044 257.287);
+  --color-slate-800: oklch(27.9% .041 260.031);
+  --color-slate-900: oklch(20.8% .042 265.755);
+  --color-slate-950: oklch(12.9% .042 264.695);
+  /* warning */
+  --color-amber-50: oklch(98.7% .022 95.277);
+  --color-amber-100: oklch(96.2% .059 95.617);
+  --color-amber-200: oklch(92.4% .12 95.746);
+  --color-amber-300: oklch(87.9% .169 91.605);
+  --color-amber-400: oklch(82.8% .189 84.429);
+  --color-amber-500: oklch(76.9% .188 70.08);
+  --color-amber-600: oklch(66.6% .179 58.318);
+  --color-amber-700: oklch(55.5% .163 48.998);
+  --color-amber-800: oklch(47.3% .137 46.201);
+  --color-amber-900: oklch(41.4% .112 45.904);
+  --color-amber-950: oklch(27.9% .077 45.635);
+  /* danger */
+  --color-red-50: oklch(97.1% .013 17.38);
+  --color-red-100: oklch(93.6% .032 17.717);
+  --color-red-200: oklch(88.5% .062 18.334);
+  --color-red-300: oklch(80.8% .114 19.571);
+  --color-red-400: oklch(70.4% .191 22.216);
+  --color-red-500: oklch(63.7% .237 25.331);
+  --color-red-600: oklch(57.7% .245 27.325);
+  --color-red-700: oklch(50.5% .213 27.518);
+  --color-red-800: oklch(44.4% .177 26.899);
+  --color-red-900: oklch(39.6% .141 25.723);
+  --color-red-950: oklch(25.8% .092 26.042);
+
+  /* Shadow */
+  --shadow-2xs: 0 1px #0000000d;
+  --shadow-xs: 0 1px 2px 0 #0000000d;
+  --shadow-sm: 0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a;
+  --shadow-md: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
+  --shadow-lg: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a;
+  --shadow-xl: 0 20px 25px -5px #0000001a, 0 8px 10px -6px #0000001a;
+  --shadow-2xl: 0 25px 50px -12px #00000040;
+  --inset-shadow-2xs: inset 0 1px #0000000d;
+  --inset-shadow-xs: inset 0 1px 1px #0000000d;
+  --inset-shadow-sm: inset 0 2px 4px #0000000d;
+  --drop-shadow-xs: 0 1px 1px #0000000d;
+  --drop-shadow-sm: 0 1px 2px #00000026;
+  --drop-shadow-md: 0 3px 3px #0000001f;
+  --drop-shadow-lg: 0 4px 4px #00000026;
+  --drop-shadow-xl: 0 9px 7px #0000001a;
+  --drop-shadow-2xl: 0 25px 25px #00000026;
+  --shadow-input: 0 0 0 3px rgba(88, 101, 242, 0.1);
+
+  /* Text Size */
+  --text-xs: .75rem;
+  --text-sm: .875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+
+  /* Z-Index */
+  --z-navbar: 100;
+}
+
+.primary-color {
+  color: var(--color-indigo-700)
+}
+
+.primary-bg {
+  background-color: var(--color-indigo-700)
+}
+
+.secondary-color {
+  color: var(--color-indigo-500);
+}
+
+.neutral-color {
+  color: var(--color-slate-400)
+}
+
+.text-white {
+  color: white;
+}
+
+.full-size {
+  width: 100%;
+  height: 100%;
+}
+
+.full-w {
+  width: 100%;
+}
+
+.full-h {
+  height: 100%;
+}
+
+.divide-y > * + * {
+  border-top: 1px solid var(--color-slate-300);
+}
+
+.col-span-1 {
+  grid-column: span 1 / span 1;
+}
+
+.col-span-2 {
+  grid-column: span 2 / span 2;
+}
+
+.col-span-3 {
+  grid-column: span 3 / span 3;
+}
+
+.col-span-4 {
+  grid-column: span 4 / span 4;
+}
+
+.page-header {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-slate-900);
+  line-height: 1.75rem;
+}
+
+.page-description {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--color-slate-700);
+  line-height: 1.5rem;
+}
+
+.section-header {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-slate-900);
+  line-height: 1.75rem;
+}
+
+.section-description {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--color-slate-700);
+  line-height: 1.5rem;
+}
+
+.data-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-slate-900);
+}
+
+.data-display {
+  font-size: 0.875rem;
+  color: var(--color-slate-700);
+}
