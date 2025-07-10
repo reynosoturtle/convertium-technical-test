@@ -19,8 +19,7 @@ type ButtonVariant = 'primary' | 'secondary' | 'neutral' | 'warning' | 'danger'
 
 const props = defineProps<{
   disabled: boolean
-
-  type: string
+  type: 'button' | 'reset' | 'submit'
   variant: ButtonVariant
 }>()
 
