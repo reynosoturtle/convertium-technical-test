@@ -12,7 +12,6 @@ export const register = (email: string, password: string) => {
 };
 
 export const login = async (email: string, password: string, remember: boolean) => {
-
   try {
     if (remember) {
       await setPersistence(auth, browserLocalPersistence);
@@ -23,7 +22,7 @@ export const login = async (email: string, password: string, remember: boolean) 
   }
 };
 
-export const logout = () => signOut(auth);
+export const logout = async () => await signOut(auth);
 
 export const getIdToken = async (): Promise<string | null> => {
   const currentUser = auth.currentUser;
