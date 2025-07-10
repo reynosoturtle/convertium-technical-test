@@ -34,7 +34,7 @@ const props = defineProps<{
 }>()
 
 const attrs = useAttrs()
-const { value: rawValue, error, onBlur } = useField<string>(props.name)
+const { value: rawValue, error, onBlur } = useField(props.name)
 
 // Compute an ISO date string for <input type="date"> from raw DD/MM/YYYY or ISO
 const modelValue = computed({

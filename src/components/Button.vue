@@ -18,7 +18,7 @@ import { defineProps, defineEmits, computed } from 'vue'
 type ButtonVariant = 'primary' | 'secondary' | 'neutral' | 'warning' | 'danger'
 
 const props = defineProps<{
-  disabled: boolean
+  disabled?: boolean
   type: 'button' | 'reset' | 'submit'
   variant: ButtonVariant
 }>()
