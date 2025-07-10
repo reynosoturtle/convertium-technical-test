@@ -3,70 +3,31 @@
     <!-- Left Side -->
     <div class="left-side">
 			<div class="card">
-				<div class="">
+				<div v-if="mode === 'signin'">
 					<h1 class="title">Welcome back 👋</h1>
 					<p class="desc">Please enter your credentials to sign in to your account.</p>
 				</div>
+				<div v-else>
+					<h1 class="title">Hello there 👋</h1>
+					<p class="desc">Please enter your desired credentials to sign up for an account.</p>
+				</div>
 
-				<form @submit.prevent="handleSubmit" class="form">
-					<div class="input-group">
-						<label class="label">Email</label>
-						<input v-model="formData.email" type="email" required class="input" :class="{ 'error': errors.email }" placeholder="Enter your email" />
-						<span v-if="errors.email" class="error-text">{{ errors.email }}</span>
-					</div>
-
-					<div class="input-group">
-						<label class="label">Password</label>
-						<div class="password-box">
-							<input v-model="formData.password" :type="showPassword ? 'text' : 'password'" required class="input" :class="{ 'error': errors.password }" placeholder="Enter your password" />
-							<button type="button" @click="togglePassword" class="eye-btn">
-								<svg v-if="showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-									<line x1="1" y1="1" x2="23" y2="23"/>
-								</svg>
-								<svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-									<circle cx="12" cy="12" r="3"/>
-								</svg>
-							</button>
-						</div>
-						<span v-if="errors.password" class="error-text">{{ errors.password }}</span>
-					</div>
-
-					<div class="options">
-						<div class="checkbox-area">
-							<input id="remember-me" v-model="formData.rememberMe" type="checkbox" class="checkbox">
-							<label for="remember-me" class="checkbox-text">Remember me</label>
-						</div>
-						<a href="#" class="forgot-link">Forgot password?</a>
-					</div>
-
-					<button type="submit" class="login-btn" :disabled="isLoading">
-						<span v-if="isLoading" class="spinner"></span>
-						{{ isLoading ? 'Signing in...' : 'Sign In' }}
-					</button>
-				</form>
+        <LoginForm v-if="mode === 'signin'" />
+        <RegisterForm v-else />
 
 				<div class="divider">
-					<span class="divider-text">Or sign in with</span>
-				</div>
-
-				<div class="social-btns">
-					<button type="button" class="social-btn">
-						<img src="../assets/google.svg" alt="Google" width="20" height="20" />
-						Google
-					</button>
-					<button type="button" class="social-btn">
-						<img src="../assets/facebook.svg" alt="Facebook" width="20" height="20" />
-						Facebook
-					</button>
-				</div>
-
-				<div class="signup">
-					<p class="signup-text">
-						Don't have an account? 
-						<a href="#" class="signup-link">Sign up</a>
-					</p>
+					<p class="divider-text">
+            <template v-if="mode === 'signin'">
+              Don't have an account? 
+              <a class="mode-toggle" @click="toggleMode">Sign up</a>
+              instead
+            </template>
+            <template v-else>
+              Already have an account? 
+              <a class="mode-toggle" @click="toggleMode">Sign in</a>
+              instead
+            </template>
+          </p>
 				</div>
 			</div>
     </div>
@@ -79,101 +40,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { login, register } from '@/apis/auth'
-import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+import LoginForm from '@/components/LoginForm.vue'
+import RegisterForm from '@/components/RegisterForm.vue'
 
-const router = useRouter()
-const authStore = useAuthStore()
+const mode = ref<'signin' | 'signup'>('signin')
 
-interface FormData {
-  email: string
-  password: string
-  rememberMe: boolean
-}
-
-interface FormErrors {
-  email?: string
-  password?: string
-}
-
-type FormType = 'signIn' | 'register'
-
-const formType = ref<FormType>('signIn')
-const formData = reactive<FormData>({
-  email: '',
-  password: '',
-  rememberMe: false,
-})
-
-const errors = reactive<FormErrors>({})
-const showPassword = ref(false)
-const isLoading = ref(false)
-
-const togglePassword = (): void => {
-  showPassword.value = !showPassword.value
-}
-
-const toggleFormType = () => {
-  if (formType.value === 'signIn') formType.value = 'register'
-  else formType.value = 'signIn'
-}
-
-const validateEmail = (email: string): boolean => {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-  if (!email) {
-    errors.email = 'Email is required'
-    return false
-  } else if (!regex.test(email)) {
-    errors.email = 'Please enter a valid email address'
-    return false
-  } else {
-    return true
-  }
-}
-
-const validatePassword = (password: string): boolean => {
-  const minLength = 6
-
-  if (!password) {
-    errors.password = 'Password is required'
-    return false
-  } else if (password.length < minLength) {
-    errors.password = 'Password must be at least 6 characters'
-    return false
-  } else {
-    return true
-  }
-}
-
-const validateForm = (): boolean => {
-  Object.keys(errors).forEach((key) => delete errors[key as keyof FormErrors])
-  return validateEmail(formData.email) && validatePassword(formData.password)
-}
-
-const resetSignInForm = () => {
-  formData.email = ''
-  formData.password = ''
-  formData.rememberMe = false
-}
-
-const handleSubmit = async (): Promise<void> => {
-  if (!validateForm()) return
-
-  isLoading.value = true
-
-  try {
-    const response = await login(formData.email, formData.password, formData.rememberMe)
-    authStore.setUser({ uid: response.user.uid, email: response.user.email })
-    resetSignInForm()
-    router.push('/')
-  } catch (error) {
-    console.error('Login failed:', error)
-  } finally {
-    isLoading.value = false
-  }
+const toggleMode = () => {
+  mode.value = mode.value === 'signin' ? 'signup' : 'signin'
+  resetForm()
 }
 </script>
 
@@ -241,15 +116,9 @@ const handleSubmit = async (): Promise<void> => {
   display: grid;
   place-items: center;
   grid-column: span 4 / span 4;
-
   background-image: url('../assets/art.jpg');
   background-size: cover;
   background-position: center;
-
-  /* border-radius: 1.5rem; */
-  border-radius: 1.5rem 0 0 1.5rem;
-
-  box-shadow: inset 1rem 0.75rem 0.5rem rgb(0 0 0 / 0.75);
 }
 
 .title {
@@ -273,148 +142,9 @@ const handleSubmit = async (): Promise<void> => {
   gap: 1.25rem;
 }
 
-.input-group {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #333;
-}
-
-.input {
-  padding: 0.875rem 1rem;
-  border: 1.5px solid #e1e5e9;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-  background: white;
-}
-
-.input:focus {
-  outline: none;
-  border-color: #5865f2;
-  box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.1);
-}
-
-.input.error {
-  border-color: #ed4245;
-}
-
-.input::placeholder {
-  color: #a0a0a0;
-}
-
-.password-box {
-  position: relative;
-  display: grid;
-}
-
-.eye-btn {
-  position: absolute;
-  right: 0.875rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: #666;
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 4px;
-}
-
-.eye-btn:hover {
-  color: #333;
-}
-
 .error-text {
   font-size: 0.8rem;
   color: #ed4245;
-}
-
-/* Options Grid */
-.options {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-}
-
-.checkbox-area {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-}
-
-.checkbox {
-  width: 1rem;
-  height: 1rem;
-  accent-color: #5865f2;
-}
-
-.checkbox-text {
-  font-size: 0.875rem;
-  color: #333;
-}
-
-.forgot-link {
-  font-size: 0.875rem;
-  color: #5865f2;
-  text-decoration: none;
-  font-weight: 500;
-  justify-self: end;
-}
-
-.forgot-link:hover {
-  text-decoration: underline;
-}
-
-.login-btn {
-  background: #5865f2;
-  color: white;
-  border: none;
-  padding: 0.875rem 1rem;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  display: flex;
-  justify-content: center;
-  place-items: center;
-  gap: 0.5rem;
-}
-
-.login-btn:hover:not(:disabled) {
-  background: #4752c4;
-  transform: translateY(-1px);
-}
-
-.login-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.spinner {
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid transparent;
-  border-top: 2px solid currentColor;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .divider {
@@ -476,37 +206,21 @@ const handleSubmit = async (): Promise<void> => {
   grid-column: 1;
 }
 
-.signup {
-  margin-top: 0.5rem;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  place-items: center;
-}
-
-.signup-text {
-  text-align: center;
-  color: #666;
-  font-size: 0.875rem;
-  margin: 0;
-}
-
-.signup-link {
-  color: #5865f2;
+.mode-toggle {
+  color: var(--color-indigo-700);
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 500;
+  margin-left: 0rem 0.125rem;
 }
 
-.signup-link:hover {
+.mode-toggle:hover {
   text-decoration: underline;
 }
 
-/* Mobile Grid */
 @media (max-width: 768px) {
   .main {
     grid-template-columns: repeat(6, minmax(0, 1fr));
     grid-template-rows: repeat(2, minmax(0, 1fr));
-    /* grid-template-rows: 40vh 1fr; */
   }
 
   .left-side {
@@ -528,21 +242,6 @@ const handleSubmit = async (): Promise<void> => {
 
   .title {
     font-size: 1.75rem;
-  }
-
-  .social-btns {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-
-  .options {
-    grid-template-columns: 1fr;
-    justify-items: start;
-    gap: 1rem;
-  }
-
-  .forgot-link {
-    justify-self: start;
   }
 }
 
