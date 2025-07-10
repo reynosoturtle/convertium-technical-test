@@ -9,17 +9,17 @@ export function useAuth() {
   const store = useAuthStore();
 
   onMounted(() => {
-    if (initialized.value) return;
-    onAuthStateChanged(auth, (user) => {
-      store.setUser(user ? { uid: user.uid, email: user.email } : null);
-      initialized.value = true;
-      
-      console.log('useAuth initialized', user)
-    });
+    if (!initialized.value) {
+      onAuthStateChanged(auth, (user) => {
+        store.setUser(user ? { uid: user.uid, email: user.email } : null);
+        initialized.value = true;
+      });
+    }
   });
 
   return {
     user: store.user,
-    isAuthenticated: computed(() => !!store.user)
+    isAuthenticated: computed(() => !!store.user),
+    initialized,
   };
 }
