@@ -65,7 +65,7 @@ const fileInput = ref<HTMLInputElement | null>(null)
 const previewUrl = ref<string | null>(null)
 const isDragOver = ref(false)
 
-const { value, error, setErrors, onBlur } = useField<string>(props.name)
+const { value, error, setError, onBlur } = useField(props.name)
 
 const triggerFileInput = () => {
   fileInput.value?.click()
@@ -88,7 +88,7 @@ const validateFile = (file: File): string | null => {
 const uploadAndSet = async (file: File) => {
   const errMsg = validateFile(file)
   if (errMsg) {
-    setErrors(errMsg)
+    setError(errMsg)
     return
   }
 
@@ -97,7 +97,7 @@ const uploadAndSet = async (file: File) => {
     previewUrl.value = URL.createObjectURL(file)
     value.value = url
   } catch {
-    setErrors('Upload failed. Please try again.')
+    setError('Upload failed. Please try again.')
   }
 }
 

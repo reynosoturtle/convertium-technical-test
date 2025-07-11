@@ -15,7 +15,7 @@ type ProfileImageMode = 'display' | 'button'
 
 defineProps<{
   mode: ProfileImageMode
-  url?: string
+  url?: string | null
 }>()
 </script>
 

@@ -72,7 +72,7 @@ const props = defineProps<{
 }>()
 
 // Bind to form context
-const { value, error, onBlur } = useField<string[]>(props.name)
+const { value, error, onBlur } = useField(props.name)
 
 // State
 const isOpen = ref(false)
@@ -95,7 +95,7 @@ function close() {
 function toggleOption(option: string) {
   const current = value.value || []
   value.value = current.includes(option)
-    ? current.filter((item) => item !== option)
+    ? current.filter((item: unknown) => item !== option)
     : [...current, option]
 }
 

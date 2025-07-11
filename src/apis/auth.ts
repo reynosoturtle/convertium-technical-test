@@ -11,11 +11,17 @@ export const register = (email: string, password: string) => {
   return createUserWithEmailAndPassword(auth, email, password);
 };
 
-export const login = async (email: string, password: string, remember: boolean) => {
+export interface LoginResult {
+  user: {
+    uid: string
+    email: string | null
+  }
+}
+
+export const login = async (email: string, password: string, remember: boolean): Promise<LoginResult> => {
   try {
-    if (remember) {
-      await setPersistence(auth, browserLocalPersistence);
-    }
+    if (remember) await setPersistence(auth, browserLocalPersistence);
+    
     return signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     return error

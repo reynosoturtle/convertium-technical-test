@@ -70,7 +70,7 @@ const props = defineProps<{
 const attrs = useAttrs()
 const slots = useSlots()
 
-const { value, error, onBlur } = useField<any, typeof props.name>(props.name)
+const { value, error, onBlur } = useField(props.name)
 
 const isVisible = ref(false)
 const toggleVisibility = () => void (isVisible.value = !isVisible.value)

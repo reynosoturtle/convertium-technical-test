@@ -48,7 +48,6 @@ const mode = ref<'signin' | 'signup'>('signin')
 
 const toggleMode = () => {
   mode.value = mode.value === 'signin' ? 'signup' : 'signin'
-  resetForm()
 }
 </script>
 
@@ -217,6 +216,7 @@ const toggleMode = () => {
   text-decoration: underline;
 }
 
+/* Mobile Grid */
 @media (max-width: 768px) {
   .main {
     grid-template-columns: repeat(6, minmax(0, 1fr));

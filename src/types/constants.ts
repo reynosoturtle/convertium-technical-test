@@ -37,3 +37,29 @@ export const PROFILE_TABS = [
   'Spouse Details',
   'Personal Preferences',
 ] as const
+
+export const PROFILE_DEFAULT_VALUES = {
+  salutation: '' as Salutation,
+  firstName: '',
+  lastName: '',
+  email: '',
+  profileImage: '',
+  additionalInformation: {
+    address: '',
+    country: '' as Country,
+    postalCode: '',
+    dateOfBirth: '',
+    gender: '' as Gender,
+  },
+  spouse: {
+    salutation: '' as Salutation,
+    firstName: '',
+    lastName: '',
+  },
+  preferences: {
+    hobbies: [] as string[],
+    sports: [] as string[],
+    musicGenres: [] as string[],
+    movieGenres: [] as string[],
+  },
+}

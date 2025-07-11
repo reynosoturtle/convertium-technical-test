@@ -1,13 +1,12 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
-import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
 import ProfileView from '../views/ProfileView.vue';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/apis/firebase'
 
 const routes: RouteRecordRaw[] = [
-  { path: '/', component: HomeView },
+  // { path: '/', component: HomeViewa },
   { path: '/login', component: LoginView },
   { path: '/profile', component: ProfileView, meta: { requiresAuth: true } },
 ];

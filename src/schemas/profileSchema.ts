@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 import { SALUTATIONS, COUNTRIES, GENDERS, MARITAL_STATUSES, HOBBIES, SPORTS, MUSIC_GENRES, MOVIE_GENRES } from '@/types/constants';
+import type { SectionDescriptor } from '@/types/formTypes';
 
 export const profileSchema = yup.object({
   salutation: yup.string().oneOf(SALUTATIONS).required('Salutation is required'),
@@ -48,7 +49,7 @@ export const profileSchema = yup.object({
     .optional()
 });
 
-export const profileFormSchema = [
+export const profileFormSchema: SectionDescriptor[] = [
   {
     id: 'basic-information',
     key: 'basicInformation',

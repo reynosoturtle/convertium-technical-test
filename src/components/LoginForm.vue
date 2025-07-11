@@ -32,9 +32,17 @@ const { resetForm, handleSubmit } = useForm(
   loginSchema
 )
 
-const handleLogin = async (values: { email: string; password: string; remember: boolean }) => {
+const handleLogin = async ({
+  email,
+  password,
+  remember = false,
+}: {
+  email: string
+  password: string
+  remember?: boolean
+}) => {
   try {
-    const result = await login(values.email, values.password, values.remember)
+    const result = await login(email, password, remember)
     authStore.setUser({ uid: result.user.uid, email: result.user.email })
     resetForm()
     router.push('/profile')

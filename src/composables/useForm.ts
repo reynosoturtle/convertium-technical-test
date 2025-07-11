@@ -14,9 +14,9 @@ export function useForm<T extends Record<string, any>>(initialValues: T, schema:
 
   const isValid = computed(() => Object.values(errors.value).every((error) => error === null))
 
-  const setFieldValue = <K extends keyof T>(key: K, value: T[K]) => {
-    values.value[key] = value
-    dirty.value[key] = true
+  const setFieldValue = (path: string, value: any) => {
+    values.value[path] = value
+    dirty.value[path] = true
   }
 
   const setFieldTouched = <K extends keyof T>(key: K, isTouched = true) => {

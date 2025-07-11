@@ -72,7 +72,7 @@ const props = defineProps<{
 const attrs = useAttrs()
 
 // Bind to form context
-const { value, error, onBlur } = useField<string>(props.name)
+const { value, error, onBlur } = useField(props.name)
 
 // Dropdown state
 const isOpen = ref(false)

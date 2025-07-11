@@ -44,7 +44,7 @@
         <template v-if="profile">
             <form @submit.prevent="handleSubmit(onSubmit)()" class="form">
               <div
-                v-for="section in profileFormSchema"
+                v-for="section in sections"
                 :key="section.key"
                 :id="section.id"
                 class="divide-y card"
@@ -58,7 +58,7 @@
 
                 <div
                   v-for="field in section.fields"
-                  :key="field.name"
+                  :key="field.props.name"
                   class=""
                 >
                   <div class="info-row">
@@ -72,9 +72,9 @@
                       </template>
                       <template v-else>
                         <div v-if="field.component === 'FileUpload'" class="profile-image-container">
-                          <ProfileImage />
+                          <ProfileImage mode="display" />
                         </div>
-                        <span v-else class="data-display">{{ resolveDataDisplay(profile, field.props.name, field.component) }}</span>
+                        <span v-else class="data-display">{{ resolveDataDisplay(profile, field.props.name) }}</span>
                       </template>
                     </div>
                   </div>
@@ -102,22 +102,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, toRaw, watch } from 'vue'
+import { ref, computed, toRaw, watch, defineAsyncComponent } from 'vue'
 import { useRouter } from 'vue-router'
 import { logout } from '@/apis/auth'
 import { useForm } from '@/composables/useForm'
 import { useProfile } from '../composables/useProfile'
 import { profileSchema, profileFormSchema } from '@/schemas/profileSchema'
+import { componentMap } from '@/types/formTypes'
+import type { SectionDescriptor, ComponentKey } from '@/types/formTypes'
 import { getAtPath } from '@/utils/formPath'
 import PageLayout from '@/layouts/PageLayout.vue'
 import Button from '../components/Button.vue'
 import EditIcon from '../components/icons/EditIcon.vue'
 import SaveIcon from '../components/icons/SaveIcon.vue'
-import DatePicker from '../components/Form/DatePicker.vue'
-import MultiSelectDropdown from '../components/Form/MultiSelectDropdown.vue'
-import SelectDropdown from '../components/Form/SelectDropdown.vue'
-import TextInput from '../components/Form/TextInput.vue'
-import FileUpload from '../components/Form/FileUpload.vue'
+// import DatePicker from '../components/Form/DatePicker.vue'
+// import MultiSelectDropdown from '../components/Form/MultiSelectDropdown.vue'
+// import SelectDropdown from '../components/Form/SelectDropdown.vue'
+// import TextInput from '../components/Form/TextInput.vue'
+// import FileUpload from '../components/Form/FileUpload.vue'
 import ProfileImage from '../components/ProfileImage.vue'
 import { PROFILE_TABS } from '@/types/constants'
 
@@ -128,14 +130,14 @@ const { handleSubmit, resetForm, values, setFieldValue } = useForm(
   profileSchema
 )
 
-const componentMap = {
-  DatePicker,
-  MultiSelectDropdown,
-  SelectDropdown,
-  TextInput,
-  FileUpload,
-  ProfileImage,
-}
+const asyncComponentMap: Record<
+  ComponentKey,
+  ReturnType<typeof defineAsyncComponent>
+> = Object.fromEntries(
+  Object.entries(componentMap).map(([key, loader]) => [key, defineAsyncComponent(loader as any)])
+) as any
+
+const sections = profileFormSchema as SectionDescriptor[]
 
 watch(
   () => initialValues.value,
@@ -181,7 +183,7 @@ const changeTab = (tab: ProfileTabs): void => {
   router.push({ hash })
 }
 
-const resolveDataDisplay = (object, path) => {
+const resolveDataDisplay = (object: Record<string, any>, path: string) => {
   const data = getAtPath(object, path)
 
   if (Array.isArray(data)) return data.join(', ')

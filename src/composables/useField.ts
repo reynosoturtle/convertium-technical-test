@@ -28,5 +28,9 @@ export function useField(path: string) {
     form.validateField(path)
   }
 
-  return { value, error, touched, dirty, onBlur }
+  const setError = (message) => {
+    form.setErrors({ [path]: message })
+  }
+
+  return { value, error, touched, dirty, onBlur, setError }
 }
