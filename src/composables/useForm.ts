@@ -36,7 +36,7 @@ export function useForm<T extends Record<string, any>>(initialValues: T, schema:
       const fieldErrors: Record<string, string> = {}
       if (err.inner) {
         err.inner.forEach((e: any) => {
-          fieldErrors[e.path as keyof T] = e.message
+          fieldErrors[e.path as string] = e.message
         })
       }
       errors.value = fieldErrors as Record<keyof T, string | null>
@@ -47,9 +47,10 @@ export function useForm<T extends Record<string, any>>(initialValues: T, schema:
   const validateField = async (key: keyof T): Promise<void> => {
     try {
       await schema.validateAt(key as string, values.value)
-      errors.value[key] = null
+      const errMap = errors.value as Record<string, string | null>;
+      errMap[key as string] = null;
     } catch (err: any) {
-      errors.value[key] = err.message
+      (errors.value as Record<string, string | null>)[key as string] = err.message
     }
   }
 

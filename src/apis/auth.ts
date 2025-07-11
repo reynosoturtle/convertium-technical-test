@@ -19,20 +19,15 @@ export interface LoginResult {
 }
 
 export const login = async (email: string, password: string, remember: boolean): Promise<LoginResult> => {
-  try {
     if (remember) await setPersistence(auth, browserLocalPersistence);
-    
-    // return signInWithEmailAndPassword(auth, email, password);
     const credential = await signInWithEmailAndPassword(auth, email, password)
+    
     return {
       user: {
         uid: credential.user.uid,
         email: credential.user.email ?? ''
       }
     }
-  } catch (error) {
-    return error
-  }
 };
 
 export const logout = async () => await signOut(auth);
