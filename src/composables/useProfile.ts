@@ -5,33 +5,8 @@ import type { UserProfile } from '@/types/profile';
 import { deepMerge } from '@/utils/deepMerge';
 import { PROFILE_DEFAULT_VALUES } from '@/types/constants'
 
-const profile = ref({ ...PROFILE_DEFAULT_VALUES })
-const defaultProfile: UserProfile = {
-  profileImage: '',
-  salutation: '',
-  firstName: '',
-  lastName: '',
-  email: '',
-  spouse: {
-    firstName: '',
-    lastName: '',
-    salutation: '',
-  },
-  preferences: {
-    hobbies: [],
-    musicGenres: [],
-    movieGenres: [],
-    sports: [],
-  },
-  additionalInformation: {
-    dateOfBirth: '',
-    address: '',
-    country: '',
-    postalCode: '',
-    gender: '',
-    maritalStatus: '',
-  },
-};
+const profile = ref<UserProfile>({ ...PROFILE_DEFAULT_VALUES })
+const defaultProfile: UserProfile = PROFILE_DEFAULT_VALUES
 
 export function useProfile() {
   const authStore = useAuthStore();

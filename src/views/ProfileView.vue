@@ -104,31 +104,38 @@
 <script setup lang="ts">
 import { ref, computed, toRaw, watch, defineAsyncComponent } from 'vue'
 import { useRouter } from 'vue-router'
-import { logout } from '@/apis/auth'
 import { useForm } from '@/composables/useForm'
 import { useProfile } from '../composables/useProfile'
 import { profileSchema, profileFormSchema } from '@/schemas/profileSchema'
-import { componentMap } from '@/types/formTypes'
 import type { SectionDescriptor, ComponentKey } from '@/types/formTypes'
 import { getAtPath } from '@/utils/formPath'
 import PageLayout from '@/layouts/PageLayout.vue'
 import Button from '../components/Button.vue'
 import EditIcon from '../components/icons/EditIcon.vue'
 import SaveIcon from '../components/icons/SaveIcon.vue'
-// import DatePicker from '../components/Form/DatePicker.vue'
-// import MultiSelectDropdown from '../components/Form/MultiSelectDropdown.vue'
-// import SelectDropdown from '../components/Form/SelectDropdown.vue'
-// import TextInput from '../components/Form/TextInput.vue'
-// import FileUpload from '../components/Form/FileUpload.vue'
+import DatePicker from '../components/Form/DatePicker.vue'
+import MultiSelectDropdown from '../components/Form/MultiSelectDropdown.vue'
+import SelectDropdown from '../components/Form/SelectDropdown.vue'
+import TextInput from '../components/Form/TextInput.vue'
+import FileUpload from '../components/Form/FileUpload.vue'
 import ProfileImage from '../components/ProfileImage.vue'
 import { PROFILE_TABS } from '@/types/constants'
+import type { UserProfile } from '@/types/profile'
 
 const { profile, updateProfile } = useProfile()
 const initialValues = computed(() => toRaw(profile.value!))
-const { handleSubmit, resetForm, values, setFieldValue } = useForm(
+const { handleSubmit, resetForm, values, setFieldValue } = useForm<UserProfile>(
   initialValues.value,
   profileSchema
 )
+
+const componentMap = {
+  DatePicker,
+  MultiSelectDropdown,
+  SelectDropdown,
+  TextInput,
+  FileUpload,
+}
 
 const asyncComponentMap: Record<
   ComponentKey,
@@ -165,7 +172,7 @@ function toggleIsEditing(flag = !isEditing.value) {
   isEditing.value = flag
 }
 
-const onSubmit = async (values: typeof initialValues.value) => {
+const onSubmit = async (values: UserProfile) => {
   try {
     await updateProfile(values)
     isEditing.value = false

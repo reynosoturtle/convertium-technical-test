@@ -1,53 +1,113 @@
 import * as yup from 'yup';
 import { SALUTATIONS, COUNTRIES, GENDERS, MARITAL_STATUSES, HOBBIES, SPORTS, MUSIC_GENRES, MOVIE_GENRES } from '@/types/constants';
 import type { SectionDescriptor } from '@/types/formTypes';
+import type { UserProfile, PersonalPreferences, SpouseDetails, AdditionalInfomation } from '@/types/profile';
 
-export const profileSchema = yup.object({
-  salutation: yup.string().oneOf(SALUTATIONS).required('Salutation is required'),
-  firstName: yup.string().required('First name is required'),
-  lastName: yup.string().required('Last name is required'),
-  email: yup.string().required('Email is required').email('Invalid email format'),
-  profileImage: yup.string().url().required('Image is required'),
-  additionalInformation: yup
-    .object({
-      address: yup.string().required('Address is required'),
-      country: yup.string().oneOf(COUNTRIES).required('Country is required'),
-      postalCode: yup.string().required('Postal code is required'),
-      dateOfBirth: yup
-        .string()
-        .required('Date of birth is required')
-        .transform((value, original) => {
-          if (typeof original === 'string' && /^\d{2}\/\d{2}\/\d{4}$/.test(original)) {
-            const [d, m, y] = original.split('/')
-            return `${y.padStart(4,'0')}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`
-          }
-          return value
-        })
-        .matches(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format'),
-      gender: yup.string().oneOf(GENDERS).required('Gender is required'),
-      maritalStatus: yup.string().oneOf(MARITAL_STATUSES).required('Marital status is required'),
-    }),
-  spouse: yup
-    .object({
-      salutation: yup.string().oneOf(SALUTATIONS).required(),
-      firstName: yup.string().required(),
-      lastName: yup.string().required()
-    })
-    .optional()
-    .when('additionalInformation.maritalStatus', {
-      is: (val: string) => val === 'Married',
-      then: schema => schema,
-      otherwise: schema => schema.strip(),
-    }),
-  preferences: yup
-    .object({
-      hobbies: yup.array().of(yup.string()),
-      sports: yup.array().of(yup.string()),
-      musicGenres: yup.array().of(yup.string()),
-      movieGenres: yup.array().of(yup.string())
-    })
-    .optional()
-});
+export const profileSchema: yup.ObjectSchema<UserProfile> = yup
+  .object({
+    salutation: yup
+      .string()
+      .oneOf(SALUTATIONS)
+      .required('Salutation is required'),
+
+    firstName: yup
+      .string()
+      .required('First name is required'),
+
+    lastName: yup
+      .string()
+      .required('Last name is required'),
+
+    email: yup
+      .string()
+      .email('Invalid email format')
+      .required('Email is required'),
+
+    profileImage: yup
+      .string()
+      .url('Must be a valid URL')
+      .required('Image is required'),
+
+    additionalInformation: yup
+      .object<AdditionalInfomation>({
+        address: yup
+          .string()
+          .required('Address is required'),
+        country: yup
+          .string()
+          .oneOf(COUNTRIES)
+          .required('Country is required'),
+        postalCode: yup
+          .string()
+          .required('Postal code is required'),
+        dateOfBirth: yup
+          .string()
+          .required('Date of birth is required')
+          .transform((value, original) => {
+            if (
+              typeof original === 'string' &&
+              /^\d{2}\/\d{2}\/\d{4}$/.test(original)
+            ) {
+              const [d, m, y] = original.split('/')
+              return `${y.padStart(4, '0')}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`
+            }
+            return value
+          })
+          .matches(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format'),
+        gender: yup
+          .string()
+          .oneOf(GENDERS)
+          .required('Gender is required'),
+        maritalStatus: yup
+          .string()
+          .oneOf(MARITAL_STATUSES)
+          .required('Marital status is required'),
+      })
+      .required(),
+
+    spouse: yup
+      .object<SpouseDetails>({
+        salutation: yup
+          .string()
+          .oneOf(SALUTATIONS)
+          .required(),
+        firstName: yup
+          .string()
+          .required(),
+        lastName: yup
+          .string()
+          .required(),
+      })
+      .required()
+      .when('additionalInformation.maritalStatus', {
+        is: (val: string) => val === 'Married',
+        then: (schema) => schema,
+        otherwise: (schema) => schema.strip(),
+      }),
+
+    preferences: yup
+      .object<PersonalPreferences>({
+        hobbies: yup
+          .array()
+          .of(yup.string().oneOf(HOBBIES))
+          .required(),
+        sports: yup
+          .array()
+          .of(yup.string().oneOf(SPORTS))
+          .required(),
+        musicGenres: yup
+          .array()
+          .of(yup.string().oneOf(MUSIC_GENRES))
+          .required(),
+        movieGenres: yup
+          .array()
+          .of(yup.string().oneOf(MOVIE_GENRES))
+          .required(),
+      })
+      .required(),
+  })
+  .required() as yup.ObjectSchema<UserProfile>
+
 
 export const profileFormSchema: SectionDescriptor[] = [
   {
