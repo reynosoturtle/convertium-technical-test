@@ -68,7 +68,7 @@
                     <template v-if="isEditing">
                       <component
                         :is="componentMap[field.component]"
-                        v-bind="field.props" />
+                        v-bind="field.props as any" />
                       </template>
                       <template v-else>
                         <div v-if="field.component === 'FileUpload'" class="profile-image-container">
