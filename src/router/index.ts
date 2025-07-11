@@ -6,7 +6,6 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/apis/firebase'
 
 const routes: RouteRecordRaw[] = [
-  // { path: '/', component: HomeViewa },
   { path: '/login', component: LoginView },
   { path: '/profile', component: ProfileView, meta: { requiresAuth: true } },
 ];
@@ -43,6 +42,7 @@ router.beforeEach(async (to, from, next) => {
   
   if (to.meta.requiresAuth && !authStore.user) next('/login')
   else if (['/login'].includes(to.path) && authStore.user) next('/profile')
+  else if (['/'].includes(to.path)) next('/login')
   else next()
 });
 
