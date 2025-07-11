@@ -7,7 +7,7 @@ export function useForm<T extends Record<string, any>>(initialValues: T, schema:
   const initial = ref<T>(JSON.parse(JSON.stringify(initialValues)))
 
   const values = ref<T>({ ...initial.value })
-  const errors = ref<Record<keyof T, string | null>>({} as Record<keyof T, string | null>)
+  const errors = ref<Record<string, string | null>>({})
   const touched = ref<Record<keyof T, boolean>>({} as Record<keyof T, boolean>)
   const dirty = ref<Record<keyof T, boolean>>({} as Record<keyof T, boolean>)
   const isSubmitting = ref(false)
@@ -23,7 +23,7 @@ export function useForm<T extends Record<string, any>>(initialValues: T, schema:
     touched.value[key] = isTouched
   }
 
-  const setErrors = (customErrors: Partial<Record<keyof T, string>>) => {
+  const setErrors = (customErrors: Record<string, string>) => {
     errors.value = { ...errors.value, ...customErrors }
   }
 

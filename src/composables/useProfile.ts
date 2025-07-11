@@ -3,10 +3,9 @@ import { getUserProfile, saveUserProfile } from '@/apis/firestore';
 import { useAuthStore } from '@/stores/auth';
 import type { UserProfile } from '@/types/profile';
 import { deepMerge } from '@/utils/deepMerge';
-import { PROFILE_DEFAULT_VALUES } from '@/types/constants.ts'
+import { PROFILE_DEFAULT_VALUES } from '@/types/constants'
 
-const profile = ref<UserProfile | PROFILE_DEFAULT_VALUES>(PROFILE_DEFAULT_VALUES);
-
+const profile = ref({ ...PROFILE_DEFAULT_VALUES })
 const defaultProfile: UserProfile = {
   profileImage: '',
   salutation: '',
