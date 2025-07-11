@@ -135,6 +135,7 @@ const componentMap = {
   SelectDropdown,
   TextInput,
   FileUpload,
+  ProfileImage,
 }
 
 const asyncComponentMap: Record<
