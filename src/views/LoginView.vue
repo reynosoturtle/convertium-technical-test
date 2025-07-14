@@ -33,8 +33,8 @@
     </div>
 
     <!-- Right Side -->
-    <div class="right-side">
-			<div class="art"></div>
+    <div class="right-side art">
+      <img :src="imagePath" class="full-size"/>
     </div>
   </div>
 </template>
@@ -43,6 +43,7 @@
 import { ref } from 'vue'
 import LoginForm from '@/components/LoginForm.vue'
 import RegisterForm from '@/components/RegisterForm.vue'
+import imagePath from '@/assets/desk.jpg'
 
 const mode = ref<'signin' | 'signup'>('signin')
 
@@ -87,14 +88,12 @@ const toggleMode = () => {
 }
 
 .art {
-  background-image: url('../assets/art.jpg');
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  display: grid;
-  place-items: center;
   grid-column: span 4 / span 4;
-  border-radius: 1rem;
+  max-height: 100vh;
+}
+
+.art img {
+  object-fit: cover;
 }
 
 .big-title {
@@ -111,13 +110,7 @@ const toggleMode = () => {
 }
 
 .right-side {
-  position: relative;
-  display: grid;
-  place-items: center;
   grid-column: span 4 / span 4;
-  background-image: url('../assets/art.jpg');
-  background-size: cover;
-  background-position: center;
 }
 
 .title {
@@ -252,10 +245,6 @@ const toggleMode = () => {
 
   .big-title {
     font-size: 1.75rem;
-  }
-
-  .right-side {
-    padding: 1rem;
   }
 
   .title {
