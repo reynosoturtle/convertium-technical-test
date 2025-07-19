@@ -42,8 +42,8 @@ const handleLogin = async ({
   remember?: boolean
 }) => {
   try {
-    const result = await login(email, password, remember)
-    authStore.setUser({ uid: result.user.uid, email: result.user.email })
+    const user = await login(email, password, remember)
+    authStore.setUser({ uid: user.uid, email: user.email })
     resetForm()
     router.push('/profile')
   } catch (error) {

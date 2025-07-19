@@ -7,26 +7,27 @@ import {
   browserLocalPersistence
 } from 'firebase/auth';
 
-export const register = (email: string, password: string) => {
-  return createUserWithEmailAndPassword(auth, email, password);
+export const register = async (email: string, password: string) => {
+  const { user } = await createUserWithEmailAndPassword(auth, email, password);
+  
+  return {
+    uid: user.uid,
+    email: user.email ?? ''
+  }
 };
 
 export interface LoginResult {
-  user: {
-    uid: string
-    email: string | null
-  }
+  uid: string
+  email: string | null
 }
 
 export const login = async (email: string, password: string, remember: boolean): Promise<LoginResult> => {
     if (remember) await setPersistence(auth, browserLocalPersistence);
-    const credential = await signInWithEmailAndPassword(auth, email, password)
+    const { user } = await signInWithEmailAndPassword(auth, email, password)
     
     return {
-      user: {
-        uid: credential.user.uid,
-        email: credential.user.email ?? ''
-      }
+      uid: user.uid,
+      email: user.email ?? ''
     }
 };
 
