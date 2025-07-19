@@ -25,11 +25,25 @@ export function useProfile() {
     }
   };
 
+  const generateDefaultProfile = async (data: { uid: string, email: string }) => {
+    if (authStore.user) {
+      profile.value.email = data.email
+      await saveUserProfile(data.uid, profile.value);
+    }
+  }
+
+  const resetProfile = () => {
+    authStore.user = null
+    profile.value = defaultProfile
+  }
+
   onMounted(fetchProfile);
 
   return {
     profile,
     fetchProfile,
-    updateProfile
+    updateProfile,
+    generateDefaultProfile,
+    resetProfile,
   };
 }
