@@ -67,22 +67,29 @@ export const profileSchema: yup.ObjectSchema<UserProfile> = yup
 
     spouse: yup
       .object<SpouseDetails>({
-        salutation: yup
-          .string()
-          .oneOf(SALUTATIONS)
-          .required(),
-        firstName: yup
-          .string()
-          .required(),
-        lastName: yup
-          .string()
-          .required(),
+        salutation: yup.string().oneOf(SALUTATIONS)
+          .when('additionalInformation.maritalStatus', {
+            is: 'Married',
+            then: (sch) => sch.required('Salutation is required'),
+            otherwise: (sch) => sch.notRequired(),
+          }),
+        firstName: yup.string()
+          .when('additionalInformation.maritalStatus', {
+            is: 'Married',
+            then: (sch) => sch.required('First name is required'),
+            otherwise: (sch) => sch.notRequired(),
+          }),
+        lastName: yup.string()
+          .when('additionalInformation.maritalStatus', {
+            is: 'Married',
+            then: (sch) => sch.required('Last name is required'),
+            otherwise: (sch) => sch.notRequired(),
+          }),
       })
-      .required()
       .when('additionalInformation.maritalStatus', {
-        is: (val: string) => val === 'Married',
-        then: (schema) => schema,
-        otherwise: (schema) => schema.strip(),
+        is: 'Married',
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.strip().notRequired(),
       }),
 
     preferences: yup
@@ -207,6 +214,15 @@ export const profileFormSchema: SectionDescriptor[] = [
         },
         attributes: {}
       },
+      {
+        component: 'SelectDropdown',
+        label: 'Marital Status',
+        props: {
+          name: 'additionalInformation.maritalStatus',
+          options: MARITAL_STATUSES,
+        },
+        attributes: {}
+      },
     ]
   },
   {
@@ -243,7 +259,7 @@ export const profileFormSchema: SectionDescriptor[] = [
     ]
   },
   {
-    id: 'preferences-preferences',
+    id: 'personal-preferences',
     key: 'preferences',
     title: 'Personal Preferences',
     description: 'Aliquip do nulla magna mollit reprehenderit dolore excepteur consectetur ea. In ipsum sunt et non esse nisi.',
