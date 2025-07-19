@@ -16,11 +16,13 @@ import { register } from '@/apis/auth'
 import { useForm } from '@/composables/useForm'
 import { registerSchema } from '@/schemas/authSchema'
 import { useAuthStore } from '@/stores/auth'
+import { useProfile } from '@/composables/useProfile'
 import TextInput from '@/components/Form/TextInput.vue'
 import Button from '@/components/Button.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const { profile, generateDefaultProfile } = useProfile()
 const { resetForm, handleSubmit } = useForm(
   {
     email: '',
@@ -36,8 +38,10 @@ const handleRegister = async (values: {
   confirmPassword: string
 }) => {
   try {
-    const result = await register(values.email, values.password)
-    authStore.setUser({ uid: result.user.uid, email: result.user.email })
+    const user = await register(values.email, values.password)
+    authStore.setUser({ uid: user.uid, email: user.email })
+    await generateDefaultProfile({ uid: user.uid, email: user.email })
+    console.log(profile)
     resetForm()
     router.push('/profile')
   } catch (error) {
