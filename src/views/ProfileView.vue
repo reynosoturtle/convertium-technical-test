@@ -128,6 +128,14 @@ const { handleSubmit, resetForm, values, setFieldValue } = useForm<UserProfile>(
   initialValues.value,
   profileSchema
 )
+watch(
+  () => values.value.additionalInformation.maritalStatus,
+  (newStatus) => {
+    if (newStatus !== 'Married') {
+      values.value.spouse = { salutation: '', firstName: '', lastName: '' }
+    }
+  }
+)
 
 const componentMap = {
   DatePicker,
