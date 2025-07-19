@@ -46,7 +46,7 @@ import LogoIcon from '@/components/icons/LogoIcon.vue'
 import NotificationIcon from '@/components/icons/NotificationIcon.vue'
 import ProfileImage from '@/components/ProfileImage.vue'
 
-const { profile } = useProfile()
+const { profile, resetProfile } = useProfile()
 const router = useRouter()
 
 const wrapper = ref<HTMLElement | null>(null)
@@ -66,6 +66,7 @@ useClickOutside(wrapper, () => {
 
 const handleLogout = async () => {
   await logout()
+  resetProfile()
   router.push('/login')
 }
 </script>
